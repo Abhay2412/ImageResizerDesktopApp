@@ -1,0 +1,1 @@
+console.log('Testing to see if the setup is performed correctly')
