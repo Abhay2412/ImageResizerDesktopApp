@@ -1,13 +1,13 @@
-const path = require("path");
-const { app, BrowserWindow, Menu } = require("electron");
+const path = require('path');
+const { app, BrowserWindow, Menu } = require('electron');
 
-const inDev = process.env.NODE_ENV !== "production";
-const checkMacPlatform = process.platform === "darwin";
+const inDev = process.env.NODE_ENV !== 'production';
+const checkMacPlatform = process.platform === 'darwin';
 
 // Helps with creating the main display
 function createMainWindow() {
   const mainWindowDisplay = new BrowserWindow({
-    title: "Image Resizer",
+    title: 'Image Resizer',
     width: inDev ? 1000 : 500,
     height: 600,
     webPreferences: {
@@ -22,16 +22,16 @@ function createMainWindow() {
     mainWindowDisplay.webContents.openDevTools();
   }
 
-  mainWindowDisplay.loadFile(path.join(__dirname, "./client/index.html"));
+  mainWindowDisplay.loadFile(path.join(__dirname, './client/index.html'));
 }
 //Create about window here
 function createAboutWindow() {
   const aboutWindowDisplay = new BrowserWindow({
-    title: "About Image Resizer",
+    title: 'About Image Resizer',
     width: 400,
     height: 400,
   });
-  aboutWindowDisplay.loadFile(path.join(__dirname, "./client/about.html"));
+  aboutWindowDisplay.loadFile(path.join(__dirname, './client/about.html'));
 }
 
 // The application is ready
@@ -42,7 +42,7 @@ app.whenReady().then(() => {
   const mainCustomMenu = Menu.buildFromTemplate(menuCustomTemplate);
   Menu.setApplicationMenu(mainCustomMenu);
 
-  app.on("activate", () => {
+  app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createMainWindow();
     }
@@ -57,7 +57,7 @@ const menuCustomTemplate = [
           label: app.name,
           submenu: [
             {
-              label: "About",
+              label: 'About',
               click: createAboutWindow,
             },
           ],
@@ -65,15 +65,15 @@ const menuCustomTemplate = [
       ]
     : []),
   {
-    role: "fileMenu", // A shortcut for File
+    role: 'fileMenu', // A shortcut for File
   },
   ...(!checkMacPlatform
     ? [
         {
-          label: "Help",
+          label: 'Help',
           submenu: [
             {
-              label: "About",
+              label: 'About',
               click: createAboutWindow,
             },
           ],
@@ -83,7 +83,7 @@ const menuCustomTemplate = [
 ];
 
 // Helps with the cross platform for this application since Mac does not close the application when X(Red dot) is pressed
-app.on("window-all-closed", () => {
+app.on('window-all-closed', () => {
   if (!checkMacPlatform) {
     app.quit();
   }

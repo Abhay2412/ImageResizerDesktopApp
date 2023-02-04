@@ -1,3 +1,5 @@
+const { ipcRenderer } = require("electron");
+
 // UI variables and has IDs from the HTML file
 const form = document.querySelector("#img-form");
 const img = document.querySelector("#img");
@@ -9,7 +11,7 @@ const widthInput = document.querySelector("#width");
 function loadOriginalImage(e) {
   const file = e.target.files[0];
   if (!fileImageChecker(file)) {
-    showError("Please select an image");
+    showError('Please select an image');
     return;
   }
 
@@ -21,15 +23,42 @@ function loadOriginalImage(e) {
     heightInput.value = this.height;
   }
 
-  form.style.display = "block";
+  form.style.display = 'block';
   filename.innerText = file.name;
   outputPath.innerText = path.join(os.homeDirectory(), 'imageresizer')
 }
 
+// Sending the image to the main
+function sendImage(e) {
+  e.preventDefault();
+
+  const width = widthInput.value;
+  const height = heightInput.value;
+  const imgPath = img.files[0].path;
+  
+  if(!img.files[0]) {
+    showError('Please upload an image');
+    return;
+  }
+
+  if(width === '' || height === '') {
+    showError('Please fill in a height and width');
+    return;
+  }
+
+  //Send to main using ipcRenderer
+  ipcRenderer.send('image:resize', {
+    imgPath,
+    width,
+    height
+  });
+}
+
+
 // Ensure the file is image
 function fileImageChecker(file) {
-  const allowedImageTypes = ["image/gif", "image/png", "image/jpeg"];
-  return file && allowedImageTypes.includes(file["type"]);
+  const allowedImageTypes = ['image/gif', 'image/png', 'image/jpeg'];
+  return file && allowedImageTypes.includes(file['type']);
 }
 
 function showError(message) {
@@ -59,4 +88,5 @@ function showSuccess(message) {
 }
 
 
-img.addEventListener("change", loadOriginalImage);
+img.addEventListener('change', loadOriginalImage);
+form.addEventListener('submit', sendImage);
