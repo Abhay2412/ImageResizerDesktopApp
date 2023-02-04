@@ -4,12 +4,16 @@ const fs = require('fs');
 const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
 const resizeImg = require('resize-img');
 
+process.env.NODE_ENV = 'production';
+
 const inDev = process.env.NODE_ENV !== 'production';
 const checkMacPlatform = process.platform === 'darwin';
 
+let mainWindowDisplay;
+
 // Helps with creating the main display
 function createMainWindow() {
-  const mainWindowDisplay = new BrowserWindow({
+  mainWindowDisplay = new BrowserWindow({
     title: 'Image Resizer',
     width: inDev ? 1000 : 500,
     height: 600,
@@ -44,6 +48,9 @@ app.whenReady().then(() => {
   // Need to implement the custom menu here
   const mainCustomMenu = Menu.buildFromTemplate(menuCustomTemplate);
   Menu.setApplicationMenu(mainCustomMenu);
+
+  // Remove mainWindowDisplay from memory on close
+  mainWindowDisplay.on('closed', () => (mainWindowDisplay = null));
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -112,7 +119,7 @@ async function resizeImage({ imgPath, width, height, dest }) {
     fs.writeFileSync(path.join(dest, filename), newPath);
 
     // Send a success message to the client
-    createMainWindow.webContents.send('image:done');
+    mainWindowDisplay.webContents.send('image:done');
 
     // Open the destination folder for the user
     shell.openPath(dest);

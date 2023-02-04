@@ -52,6 +52,10 @@ function sendImage(e) {
   });
 }
 
+// Catch the image:done event 
+ipcRenderer.on('image:done', () => {
+  showSuccess(`Image resized to the following dimensions ${widthInput.value} x ${heightInput.value}`);
+})
 
 // Ensure the file is image
 function fileImageChecker(file) {
