@@ -21,15 +21,13 @@ function createMainWindow() {
 }
 //Create about window here
 function createAboutWindow() {
-    const aboutWindowDisplay = new BrowserWindow({
-        title: "About Image Resizer",
-        width: 400,
-        height: 400,
-    });
-    aboutWindowDisplay.loadFile(path.join(__dirname, "./client/about.html"));
+  const aboutWindowDisplay = new BrowserWindow({
+    title: "About Image Resizer",
+    width: 400,
+    height: 400,
+  });
+  aboutWindowDisplay.loadFile(path.join(__dirname, "./client/about.html"));
 }
-
-
 
 // The application is ready
 app.whenReady().then(() => {
@@ -55,7 +53,7 @@ const menuCustomTemplate = [
           submenu: [
             {
               label: "About",
-              click: createAboutWindow
+              click: createAboutWindow,
             },
           ],
         },
@@ -71,7 +69,7 @@ const menuCustomTemplate = [
           submenu: [
             {
               label: "About",
-              click: createAboutWindow
+              click: createAboutWindow,
             },
           ],
         },
