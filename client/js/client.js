@@ -13,6 +13,14 @@ function loadOriginalImage(e) {
     return;
   }
 
+  // Retrieve the original dimensions from the image
+  const image = new Image();
+  image.src = URL.createObjectURL(file);
+  image.onload = function () {
+    widthInput.value = this.width;
+    heightInput.value = this.height;
+  }
+
   form.style.display = "block";
   filename.innerText = file.name;
 }
