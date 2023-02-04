@@ -1,5 +1,7 @@
 const path = require('path');
-const { app, BrowserWindow, Menu } = require('electron');
+const os = require('os');
+const fs = require('fs');
+const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 const inDev = process.env.NODE_ENV !== 'production';
 const checkMacPlatform = process.platform === 'darwin';
@@ -81,6 +83,22 @@ const menuCustomTemplate = [
       ]
     : []),
 ];
+
+// Respond to ipcRenderer resize
+ipcMain.on('image:resize', (e, options) => {
+  options.dest = path.join(os.homedir(), 'imageresizer');
+  resizeImage(options);
+});
+
+// Perform the operation of resizing the image
+function resizeImage({ imgPath, width, height, dest }) {
+  try {
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 // Helps with the cross platform for this application since Mac does not close the application when X(Red dot) is pressed
 app.on('window-all-closed', () => {

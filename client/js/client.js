@@ -1,5 +1,3 @@
-const { ipcRenderer } = require("electron");
-
 // UI variables and has IDs from the HTML file
 const form = document.querySelector("#img-form");
 const img = document.querySelector("#img");
