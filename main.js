@@ -1,7 +1,8 @@
 const path = require('path');
 const os = require('os');
 const fs = require('fs');
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, shell } = require('electron');
+const resizeImg = require('resize-img');
 
 const inDev = process.env.NODE_ENV !== 'production';
 const checkMacPlatform = process.platform === 'darwin';
@@ -91,9 +92,30 @@ ipcMain.on('image:resize', (e, options) => {
 });
 
 // Perform the operation of resizing the image
-function resizeImage({ imgPath, width, height, dest }) {
+async function resizeImage({ imgPath, width, height, dest }) {
   try {
-    
+    const newPath = await resizeImg(fs.readFileSync(imgPath), {
+      width: +width,
+      height: +height
+    });
+
+    // Creates the filename which is the original 
+    const filename = path.basename(imgPath);
+
+    // Create the destination folder if not existing
+    if(!fs.existsSync(dest)) {
+      fs.mkdirSync(dest);
+    }
+
+    // Write the resized image file to the destination
+
+    fs.writeFileSync(path.join(dest, filename), newPath);
+
+    // Send a success message to the client
+    createMainWindow.webContents.send('image:done');
+
+    // Open the destination folder for the user
+    shell.openPath(dest);
   } catch (error) {
     console.log(error)
   }
