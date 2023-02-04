@@ -23,6 +23,7 @@ function loadOriginalImage(e) {
 
   form.style.display = "block";
   filename.innerText = file.name;
+  outputPath.innerText = path.join(os.homeDirectory(), 'imageresizer')
 }
 
 // Ensure the file is image
